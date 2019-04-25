@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import User from './User'
+import List from '@material-ui/core/List'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+	state = {
+		users: null
+	}
+
+	componentDidMount = () => {
+		fetch('https://randomuser.me/api?results=10')
+			.then(response => response.json())
+			.then(data => {
+				this.setState({ users: data.results })
+			})
+	}
+
+	render() {
+		return (
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center'
+				}}
+			>
+				<h1
+					style={{
+						padding: '15px',
+						borderBottom: '1px solid #7a7a7a',
+						color: '#7a7a7a'
+					}}
+				>
+					RANDOM USERS
+				</h1>
+				<List>
+					{
+						this.state.users && this.state.users.map(
+							user => (
+								<User
+									key={user.login.uuid}
+									user={user}
+								/>
+							)
+						)
+					}
+				</List>
+			</div>
+		)
+	}
 }
 
-export default App;
+export default App
